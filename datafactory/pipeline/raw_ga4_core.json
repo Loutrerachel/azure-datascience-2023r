@@ -4,6 +4,7 @@
 		"activities": [
 			{
 				"name": "Demo1",
+				"description": "Demo1",
 				"type": "SetVariable",
 				"dependsOn": [],
 				"userProperties": []
