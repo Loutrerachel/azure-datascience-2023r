@@ -7,9 +7,27 @@
 				"description": "Demo2\n",
 				"type": "SetVariable",
 				"dependsOn": [],
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Demo2",
+					"value": "Demo"
+				}
 			}
 		],
+		"variables": {
+			"Demo2": {
+				"type": "String"
+			},
+			"Demo3": {
+				"type": "String"
+			},
+			"Demo4": {
+				"type": "String"
+			},
+			"Demo5": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "01_raw_source"
 		},

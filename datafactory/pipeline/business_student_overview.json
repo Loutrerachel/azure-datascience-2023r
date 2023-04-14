@@ -7,9 +7,30 @@
 				"description": "Demo5",
 				"type": "SetVariable",
 				"dependsOn": [],
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Demo5",
+					"value": "Demo"
+				}
 			}
 		],
+		"variables": {
+			"Demo1": {
+				"type": "String"
+			},
+			"Demo2": {
+				"type": "String"
+			},
+			"Demo3": {
+				"type": "String"
+			},
+			"Demo4": {
+				"type": "String"
+			},
+			"Demo5": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "03_business_reports"
 		},
