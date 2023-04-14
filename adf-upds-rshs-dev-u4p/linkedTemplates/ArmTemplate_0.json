@@ -1,0 +1,319 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-upds-rshs-dev-u4p"
+		},
+		"ADLSLinkedService_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLSLinkedService'"
+		},
+		"FileLinkedService_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileLinkedService'"
+		},
+		"ADLSLinkedService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dlsupdsrshsdev5kf.dfs.core.windows.net/"
+		},
+		"FileLinkedService_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\HOME\\D$\\data"
+		},
+		"FileLinkedService_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "Raquel"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/business_student_overview')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Demo5",
+						"description": "Demo5",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Demo5",
+							"value": "Demo"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"Demo1": {
+						"type": "String"
+					},
+					"Demo2": {
+						"type": "String"
+					},
+					"Demo3": {
+						"type": "String"
+					},
+					"Demo4": {
+						"type": "String"
+					},
+					"Demo5": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "03_business_reports"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-04-14T01:05:46Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/master_party_core')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Demo3",
+						"description": "Demo3",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Demo3",
+							"value": "Demo"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"Demo1": {
+						"type": "String"
+					},
+					"Demo2": {
+						"type": "String"
+					},
+					"Demo3": {
+						"type": "String"
+					},
+					"Demo4": {
+						"type": "String"
+					},
+					"Demo5": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "02_master_models"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-04-14T01:05:46Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/master_transaction_core')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Demo4",
+						"description": "Demo4",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Demo4",
+							"value": "Demo"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"Demo1": {
+						"type": "String"
+					},
+					"Demo2": {
+						"type": "String"
+					},
+					"Demo3": {
+						"type": "String"
+					},
+					"Demo4": {
+						"type": "String"
+					},
+					"Demo5": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "02_master_models"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-04-14T01:05:46Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/raw_ga4_core')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Demo1",
+						"description": "Demo1",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Demo1",
+							"value": "Demo"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"Demo1": {
+						"type": "String"
+					},
+					"Demo2": {
+						"type": "String"
+					},
+					"Demo3": {
+						"type": "String"
+					},
+					"Demo4": {
+						"type": "String"
+					},
+					"Demo5": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "01_raw_source"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-04-14T01:05:46Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/raw_know_core')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Demo2",
+						"description": "Demo2\n",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Demo2",
+							"value": "Demo"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"Demo2": {
+						"type": "String"
+					},
+					"Demo3": {
+						"type": "String"
+					},
+					"Demo4": {
+						"type": "String"
+					},
+					"Demo5": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "01_raw_source"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-04-14T01:05:46Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLSLinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ADLSLinkedService_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ADLSLinkedService_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IRMLPLocal012')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileLinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('FileLinkedService_properties_typeProperties_host')]",
+					"userId": "[parameters('FileLinkedService_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FileLinkedService_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "IRMLPLocal012",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/IRMLPLocal012')]"
+			]
+		}
+	]
+}

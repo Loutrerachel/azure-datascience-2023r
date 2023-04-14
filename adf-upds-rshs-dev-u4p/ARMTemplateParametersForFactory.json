@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-upds-rshs-dev-u4p"
+		},
+		"ADLSLinkedService_accountKey": {
+			"value": ""
+		},
+		"FileLinkedService_password": {
+			"value": ""
+		},
+		"ADLSLinkedService_properties_typeProperties_url": {
+			"value": "https://dlsupdsrshsdev5kf.dfs.core.windows.net/"
+		},
+		"FileLinkedService_properties_typeProperties_host": {
+			"value": "\\\\HOME\\D$\\data"
+		},
+		"FileLinkedService_properties_typeProperties_userId": {
+			"value": "Raquel"
+		}
+	}
+}
