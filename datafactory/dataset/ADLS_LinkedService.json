@@ -21,7 +21,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "data/sharedknow/users",
+				"fileName": "@concat(dataset().appname,'/',dataset().objectname,'/',dataset().filename)",
+				"folderPath": "data",
 				"fileSystem": "raw"
 			},
 			"compressionCodec": "snappy"
