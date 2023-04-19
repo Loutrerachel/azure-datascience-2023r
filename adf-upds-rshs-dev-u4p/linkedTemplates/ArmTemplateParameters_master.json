@@ -11,6 +11,9 @@
 		"FileLinkedService_password": {
 			"value": ""
 		},
+		"FileServerTemporal_password": {
+			"value": ""
+		},
 		"ADLSLinkedService_properties_typeProperties_url": {
 			"value": "https://dlsupdsrshsdev5kf.dfs.core.windows.net/"
 		},
@@ -18,6 +21,12 @@
 			"value": "\\\\HOME\\D$\\data"
 		},
 		"FileLinkedService_properties_typeProperties_userId": {
+			"value": "Raquel"
+		},
+		"FileServerTemporal_properties_typeProperties_host": {
+			"value": "\\\\HOME\\D$\\data"
+		},
+		"FileServerTemporal_properties_typeProperties_userId": {
 			"value": "Raquel"
 		},
 		"containerUri": {

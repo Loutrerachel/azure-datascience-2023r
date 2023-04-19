@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'FileLinkedService'"
 		},
+		"FileServerTemporal_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileServerTemporal'"
+		},
 		"ADLSLinkedService_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dlsupdsrshsdev5kf.dfs.core.windows.net/"
@@ -24,6 +28,14 @@
 			"defaultValue": "\\\\HOME\\D$\\data"
 		},
 		"FileLinkedService_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "Raquel"
+		},
+		"FileServerTemporal_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\HOME\\D$\\data"
+		},
+		"FileServerTemporal_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "Raquel"
 		},
@@ -60,6 +72,9 @@
 					"FileLinkedService_password": {
 						"value": "[parameters('FileLinkedService_password')]"
 					},
+					"FileServerTemporal_password": {
+						"value": "[parameters('FileServerTemporal_password')]"
+					},
 					"ADLSLinkedService_properties_typeProperties_url": {
 						"value": "[parameters('ADLSLinkedService_properties_typeProperties_url')]"
 					},
@@ -68,6 +83,12 @@
 					},
 					"FileLinkedService_properties_typeProperties_userId": {
 						"value": "[parameters('FileLinkedService_properties_typeProperties_userId')]"
+					},
+					"FileServerTemporal_properties_typeProperties_host": {
+						"value": "[parameters('FileServerTemporal_properties_typeProperties_host')]"
+					},
+					"FileServerTemporal_properties_typeProperties_userId": {
+						"value": "[parameters('FileServerTemporal_properties_typeProperties_userId')]"
 					}
 				}
 			},

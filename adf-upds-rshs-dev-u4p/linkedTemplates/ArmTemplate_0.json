@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'FileLinkedService'"
 		},
+		"FileServerTemporal_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileServerTemporal'"
+		},
 		"ADLSLinkedService_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dlsupdsrshsdev5kf.dfs.core.windows.net/"
@@ -24,6 +28,14 @@
 			"defaultValue": "\\\\HOME\\D$\\data"
 		},
 		"FileLinkedService_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "Raquel"
+		},
+		"FileServerTemporal_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\HOME\\D$\\data"
+		},
+		"FileServerTemporal_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "Raquel"
 		}
@@ -292,6 +304,31 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ADLS_LinkedService')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLSLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "data",
+						"fileSystem": "raw"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLSLinkedService')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/FileLinkedService')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -316,28 +353,27 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ADLS_LinkedService')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/FileServerTemporal')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ADLSLinkedService",
-					"type": "LinkedServiceReference"
-				},
 				"annotations": [],
-				"type": "Parquet",
+				"type": "FileServer",
 				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "data",
-						"fileSystem": "raw"
-					},
-					"compressionCodec": "snappy"
+					"host": "[parameters('FileServerTemporal_properties_typeProperties_host')]",
+					"userId": "[parameters('FileServerTemporal_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FileServerTemporal_password')]"
+					}
 				},
-				"schema": []
+				"connectVia": {
+					"referenceName": "IRMLPLocal012",
+					"type": "IntegrationRuntimeReference"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ADLSLinkedService')]"
+				"[concat(variables('factoryId'), '/integrationRuntimes/IRMLPLocal012')]"
 			]
 		},
 		{
