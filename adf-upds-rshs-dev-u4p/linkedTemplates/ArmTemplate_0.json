@@ -92,53 +92,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/master_party_core')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Demo3",
-						"description": "Demo3",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "Demo3",
-							"value": "Demo"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"variables": {
-					"Demo1": {
-						"type": "String"
-					},
-					"Demo2": {
-						"type": "String"
-					},
-					"Demo3": {
-						"type": "String"
-					},
-					"Demo4": {
-						"type": "String"
-					},
-					"Demo5": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "02_master_models"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-04-14T01:05:46Z"
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/master_transaction_core')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -298,6 +251,31 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_master_source_parquet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLSLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "data",
+						"fileSystem": "master"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLSLinkedService')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_source_csv')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -340,6 +318,127 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/FileLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ADLS_LinkedService",
+								"type": "DatasetReference"
+							},
+							"name": "Rawuser"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_master_source_parquet",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> Rawuser",
+						"Rawuser sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     filePattern:'m_users[n]',",
+						"     truncate: true,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ADLS_LinkedService')]",
+				"[concat(variables('factoryId'), '/datasets/ds_master_source_parquet')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/master_party_core')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data Users",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Rawuser": {
+										"filename": "users.parquet",
+										"appname": "sharedknow",
+										"objectname": "users"
+									},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"Demo1": {
+						"type": "String"
+					},
+					"Demo2": {
+						"type": "String"
+					},
+					"Demo3": {
+						"type": "String"
+					},
+					"Demo4": {
+						"type": "String"
+					},
+					"Demo5": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "02_master_models"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-04-14T01:05:46Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
 			]
 		},
 		{
