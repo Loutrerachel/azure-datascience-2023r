@@ -192,15 +192,70 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Demo1",
-						"description": "Demo1",
-						"type": "SetVariable",
+						"name": "Copy Users",
+						"type": "Copy",
 						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
-							"variableName": "Demo1",
-							"value": "Demo"
-						}
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "FileServerReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_source_csv",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": "sk_users.csv",
+									"appname": "sharedknow",
+									"objectname": "users"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ADLS_LinkedService",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": "users.parquet",
+									"appname": "sharedknow",
+									"objectname": "users"
+								}
+							}
+						]
 					}
 				],
 				"policy": {
@@ -230,7 +285,10 @@
 				"annotations": [],
 				"lastPublishTime": "2023-04-14T01:05:46Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_source_csv')]",
+				"[concat(variables('factoryId'), '/datasets/ADLS_LinkedService')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/raw_know_core')]",
@@ -285,11 +343,26 @@
 					"referenceName": "ADLSLinkedService",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					},
+					"appname": {
+						"type": "string"
+					},
+					"objectname": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "Parquet",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat(dataset().appname,'/',dataset().objectname,'/',dataset().filename)",
+							"type": "Expression"
+						},
 						"folderPath": "data",
 						"fileSystem": "raw"
 					},
@@ -310,16 +383,34 @@
 					"referenceName": "FileLinkedService",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					},
+					"appname": {
+						"type": "string"
+					},
+					"objectname": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "FileServerLocation",
-						"fileName": "sk_badges.csv",
-						"folderPath": "sharedknow/badges"
+						"fileName": {
+							"value": "@concat(dataset().objectname,'/',dataset().filename)",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().appname",
+							"type": "Expression"
+						}
 					},
 					"columnDelimiter": "|",
 					"escapeChar": "\\",
+					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
 				"schema": []
