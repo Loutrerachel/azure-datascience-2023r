@@ -3,15 +3,140 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Demo2",
-				"description": "Demo2\n",
-				"type": "SetVariable",
+				"name": "Copy Users",
+				"type": "Copy",
 				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "Demo2",
-					"value": "Demo"
-				}
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "FileServerReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_source_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "sk_users.csv",
+							"appname": "sharedknow",
+							"objectname": "users"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ADLS_LinkedService",
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "users.parquet",
+							"appname": "sharedknow",
+							"objectname": "users"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy Posts",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy Users",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ADLS_LinkedService",
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "2008-01-01/sk_posts_200801.csv",
+							"appname": "sharedknow",
+							"objectname": "posts"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ADLS_LinkedService",
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "2008-01-01.parquet",
+							"appname": "sharedknow",
+							"objectname": "posts"
+						}
+					}
+				]
 			}
 		],
 		"variables": {
