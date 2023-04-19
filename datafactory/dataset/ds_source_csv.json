@@ -5,16 +5,34 @@
 			"referenceName": "FileLinkedService",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"filename": {
+				"type": "string"
+			},
+			"appname": {
+				"type": "string"
+			},
+			"objectname": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "FileServerLocation",
-				"fileName": "sk_badges.csv",
-				"folderPath": "sharedknow/badges"
+				"fileName": {
+					"value": "@concat(dataset().objectname,'/',dataset().filename)",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().appname",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": "|",
 			"escapeChar": "\\",
+			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
 		"schema": []
