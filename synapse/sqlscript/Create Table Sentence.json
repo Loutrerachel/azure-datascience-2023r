@@ -1,0 +1,17 @@
+{
+	"name": "Create Table Sentence",
+	"properties": {
+		"content": {
+			"query": "-----------------------------------------------\n--Paso 01\n\nUSE updatalakehouse;\nGO\n\n-----------------------------------------------\nSELECT TOP (10) *\nFrom OPENROWSET (BULK '/raw/data/sharedknow/users/*.parquet',\nDATA_SOURCE= 'ExternalUPDataSource',\nFORMAT ='PARQUET')  AS [file]\nGO;\n\n-----------------------------------------------\n--Paso 02\n-----------------------------------------------\nCREATE EXTERNAL TABLE master_party.dim_usersfinal(\n    party_id nvarchar(50),\n    CreationDate nvarchar(40),\n    DownVotes nvarchar(10),\n    LastAccessDate nvarchar(50),    \n    \n)\n WITH (\n     LOCATION = '/raw/data/sharedknow/users/',\n     DATA_SOURCE = ExternalUPDataSource,  \n     FILE_FORMAT = UPParquetFileFormat\n )\nGO\n\nSELECT TOP(10) master_party.dim_users;\n\n-----------------------------------------------\n--Paso 03\n-----------------------------------------------\nSELECT party_id,hash_unique,process_date, email,creation_date,\nreputation_count, upvotes_count, downvotes_count, views_count, record_source, \nflag_active,load_date,creation_user\nFROM master_party.m_party\n\n-----------------------------------------------\n--Paso 04\n-----------------------------------------------\nCREATE EXTERNAL TABLE business_knowa.bi_period_dim \nWITH (\n    LOCATION = '/business/business_knowa/bi_period_dim/',\n    DATA_SOURCE = ExternalUPDataSource,  \n    FILE_FORMAT = UPParquetFileFormat\n) AS \nWITH ShortCreationTable(shortdate) AS (\nSELECT CONVERT(DATE, SUBSTRING(creation_date, 1,10)) AS shortdate\nFROM master_transaction.t_interaction\n), DistinctDateTable (distinctdate) AS (\nSELECT DISTINCT shortdate as distinctdate\nFROM ShortCreationTable\n)\nSELECT ROW_NUMBER() OVER(ORDER BY distinctdate ASC) AS period_id, \ndistinctdate as period,\nYEAR(distinctdate) as year,\nMONTH(distinctdate) as month\nFROM DistinctDateTable;\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "updatalakehouse",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
