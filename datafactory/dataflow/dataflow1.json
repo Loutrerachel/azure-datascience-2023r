@@ -3,35 +3,11 @@
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [
-				{
-					"dataset": {
-						"referenceName": "ADLS_LinkedService",
-						"type": "DatasetReference"
-					},
-					"name": "Rawuser"
-				}
-			],
-			"sinks": [
-				{
-					"name": "sink1"
-				}
-			],
+			"sources": [],
+			"sinks": [],
 			"transformations": [],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> Rawuser",
-				"Rawuser sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     filePattern:'m_users[n]',",
-				"     truncate: true,",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     format: 'parquet',",
-				"     preCommands: [],",
-				"     postCommands: []) ~> sink1"
+				""
 			]
 		}
 	}
