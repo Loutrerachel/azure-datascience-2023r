@@ -17,7 +17,28 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "dataflow1",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"parameters": {
+							"filename": {
+								"value": "'@{pipeline().parameters.filename}'",
+								"type": "Expression"
+							},
+							"appname": {
+								"value": "'@{pipeline().parameters.appname}'",
+								"type": "Expression"
+							},
+							"objectname": {
+								"value": "'@{pipeline().parameters.objectname}'",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"Rawuser": {
+								"filename": "sk_users.csv",
+								"appname": "sharedknow",
+								"objectname": "users"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
@@ -27,6 +48,17 @@
 				}
 			}
 		],
+		"parameters": {
+			"filename": {
+				"type": "string"
+			},
+			"appname": {
+				"type": "string"
+			},
+			"objectname": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "02_master_models"
 		},
