@@ -113,10 +113,23 @@
 							"dataflow": {
 								"referenceName": "dataflow1",
 								"type": "DataFlowReference",
-								"parameters": {},
+								"parameters": {
+									"filename": {
+										"value": "'@{pipeline().parameters.filename}'",
+										"type": "Expression"
+									},
+									"appname": {
+										"value": "'@{pipeline().parameters.appname}'",
+										"type": "Expression"
+									},
+									"objectname": {
+										"value": "'@{pipeline().parameters.objectname}'",
+										"type": "Expression"
+									}
+								},
 								"datasetParameters": {
 									"Rawuser": {
-										"filename": "users.parquet",
+										"filename": "sk_users.csv",
 										"appname": "sharedknow",
 										"objectname": "users"
 									},
@@ -136,21 +149,15 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
-				"variables": {
-					"Demo1": {
-						"type": "String"
+				"parameters": {
+					"filename": {
+						"type": "string"
 					},
-					"Demo2": {
-						"type": "String"
+					"appname": {
+						"type": "string"
 					},
-					"Demo3": {
-						"type": "String"
-					},
-					"Demo4": {
-						"type": "String"
-					},
-					"Demo5": {
-						"type": "String"
+					"objectname": {
+						"type": "string"
 					}
 				},
 				"folder": {
@@ -219,7 +226,14 @@
 					{
 						"name": "Copy Users",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Copy Posttypes",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -351,7 +365,14 @@
 					{
 						"name": "Copy Comments",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Copy Badges",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -417,7 +438,14 @@
 					{
 						"name": "Copy Linktypes",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Copy Comments",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -483,7 +511,14 @@
 					{
 						"name": "Copy Postlinks",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Copy Linktypes",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -549,7 +584,14 @@
 					{
 						"name": "Copy Posts1",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Copy Postlinks",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -615,7 +657,14 @@
 					{
 						"name": "Copy Posttypes",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Copy Posts2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -681,7 +730,14 @@
 					{
 						"name": "Copy Votes",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Copy Users",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -747,7 +803,14 @@
 					{
 						"name": "Copy Votetypes",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Copy Votes",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -792,7 +855,7 @@
 								"referenceName": "ds_source_csv",
 								"type": "DatasetReference",
 								"parameters": {
-									"filename": "votetypes.csv",
+									"filename": "sk_votetypes.csv",
 									"appname": "sharedknow",
 									"objectname": "votetypes"
 								}
@@ -813,7 +876,14 @@
 					{
 						"name": "Copy Posts2",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Copy Posts1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -990,9 +1060,6 @@
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
 									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "ParquetReadSettings"
 								}
 							},
 							"sink": {
@@ -1126,7 +1193,44 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "Id",
+						"type": "UTF8"
+					},
+					{
+						"name": "CreationDate",
+						"type": "UTF8"
+					},
+					{
+						"name": "DownVotes",
+						"type": "UTF8"
+					},
+					{
+						"name": "LastAccessDate",
+						"type": "UTF8"
+					},
+					{
+						"name": "Reputation",
+						"type": "UTF8"
+					},
+					{
+						"name": "UpVotes",
+						"type": "UTF8"
+					},
+					{
+						"name": "Views",
+						"type": "UTF8"
+					},
+					{
+						"name": "AccountId",
+						"type": "UTF8"
+					},
+					{
+						"name": "Email",
+						"type": "UTF8"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ADLSLinkedService')]"
@@ -1279,15 +1383,30 @@
 					],
 					"transformations": [],
 					"scriptLines": [
+						"parameters{",
+						"     filename as string,",
+						"     appname as string,",
+						"     objectname as string",
+						"}",
 						"source(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
 						"     format: 'parquet') ~> Rawuser",
 						"Rawuser sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
+						"     input(",
+						"          Id as string,",
+						"          CreationDate as string,",
+						"          DownVotes as string,",
+						"          LastAccessDate as string,",
+						"          Reputation as string,",
+						"          UpVotes as string,",
+						"          Views as string,",
+						"          AccountId as string,",
+						"          Email as string",
+						"     ),",
 						"     format: 'parquet',",
-						"     filePattern:'m_users[n]',",
-						"     truncate: true,",
+						"     filePattern:'m_users[n].parquet',",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
