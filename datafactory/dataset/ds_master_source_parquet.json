@@ -1,0 +1,57 @@
+{
+	"name": "ds_master_source_parquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ADLSLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "data",
+				"fileSystem": "master"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "Id",
+				"type": "UTF8"
+			},
+			{
+				"name": "CreationDate",
+				"type": "UTF8"
+			},
+			{
+				"name": "DownVotes",
+				"type": "UTF8"
+			},
+			{
+				"name": "LastAccessDate",
+				"type": "UTF8"
+			},
+			{
+				"name": "Reputation",
+				"type": "UTF8"
+			},
+			{
+				"name": "UpVotes",
+				"type": "UTF8"
+			},
+			{
+				"name": "Views",
+				"type": "UTF8"
+			},
+			{
+				"name": "AccountId",
+				"type": "UTF8"
+			},
+			{
+				"name": "Email",
+				"type": "UTF8"
+			}
+		]
+	}
+}
