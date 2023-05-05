@@ -17,14 +17,7 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "dataflow1",
-						"type": "DataFlowReference",
-						"datasetParameters": {
-							"Rawuser": {
-								"filename": "users.parquet",
-								"appname": "sharedknow",
-								"objectname": "users"
-							}
-						}
+						"type": "DataFlowReference"
 					},
 					"compute": {
 						"coreCount": 8,
